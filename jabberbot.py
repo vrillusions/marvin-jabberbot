@@ -159,6 +159,7 @@ class JabberBot(object):
 
     def help_callback( self, mess, args):
         """Returns a help string listing available options. Automatically assigned to the "help" command."""
+	self.commands.items().sort()
         usage = '\n'.join( [ '%s: %s' % ( name, command.__doc__ or '(undocumented)' ) for ( name, command ) in self.commands.items() if name != 'help' ])
 
         if self.__doc__:
