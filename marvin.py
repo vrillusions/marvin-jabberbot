@@ -27,7 +27,7 @@ class MarvinJabberBot(JabberBot):
     
     Available commands:"""
     def bot_serverinfo( self, mess, args):
-        """Displays information about the server."""
+        """HIDDEN Displays information about the server."""
         #version = open('/proc/version').read().strip()
         #loadavg = open('/proc/loadavg').read().strip()
         #return '%s\n\n%s' % ( version, loadavg, )
@@ -91,7 +91,7 @@ class MarvinJabberBot(JabberBot):
     #    return '\n'.join(roster)
 
     def bot_reload( self, mess, args):
-        """Reloads the bot."""
+        """HIDDEN Reloads the bot."""
         self.quit()
         return None
 
