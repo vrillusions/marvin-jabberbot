@@ -97,6 +97,8 @@ class JabberBot(object):
                 return None
             
             conn.RegisterHandler( 'message', self.callback_message)
+            conn.RegisterHandler('presence', self.subscribe_handler, 'subscribe')
+            conn.RegisterHandler('presence', self.unsubscribed_handler, 'unsubscribed')
             conn.sendInitPresence()
             self.conn = conn
 

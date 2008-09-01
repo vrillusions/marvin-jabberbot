@@ -21,11 +21,28 @@ import botcommands
 
 
 class MarvinJabberBot(JabberBot):
-    """Incredible... It's even worse than I thought it would be.
+    """Incredible... It's even worse than I thought it would be."""
+    def connectCallback(self):
+        """Called after successful connection but before processing"""
+        # would have like to add the RegisterHandlers here but it doesn't appear to work
+        pass
     
-    I don't authorize connections by default, use the 'authorize' command
+    def subscribe_handler(self, conn, pres):
+        """Handles requests from users to subscribe to bot"""
+        # for some reason this HAS to be set before the initial connection. Place the
+        # following in the connect() function of main file
+        #   conn.RegisterHandler('presence', self.subscribe_handler, 'subscribe')
+        jid = pres.getFrom().getStripped()
+        self.conn.Roster.Authorize(jid)
+        self.conn.Roster.Subscribe(jid)
     
-    Available commands:"""
+    def unsubscribed_handler(self, conn, pres):
+        """Handles notifications that the user has unsubscribed (removed) the bot"""
+        # place follwoing in connect() function of main file
+        #   conn.RegisterHandler('presence', self.unsubscribed_handler, 'unsubscribed')
+        jid = pres.getFrom().getStripped()
+        self.conn.Roster.delItem(jid)
+    
     def bot_serverinfo( self, mess, args):
         """HIDDEN Displays information about the server."""
         #version = open('/proc/version').read().strip()
@@ -58,22 +75,23 @@ class MarvinJabberBot(JabberBot):
         """Returns SHA1 hash in hexadecimal format."""
         return hashlib.sha1(args).hexdigest()
 
-    def bot_authorize( self, mess, args):
-        """Have me authorize your subscription to my presence."""
-        # also sends a subscribe request
-        # you authorize the stripped version of JID object
-        f = mess.getFrom().getStripped()
-        self.conn.Roster.Authorize( f)
-        self.conn.Roster.Subscribe( f)
-        return "Authorized."
+    # no longer needed
+    #def bot_authorize( self, mess, args):
+    #    """Have me authorize your subscription to my presence."""
+    #    # also sends a subscribe request
+    #    # you authorize the stripped version of JID object
+    #    f = mess.getFrom().getStripped()
+    #    self.conn.Roster.Authorize( f)
+    #    self.conn.Roster.Subscribe( f)
+    #    return "Authorized."
 
-    def bot_deauthorize( self, mess, args):
-        """Remove yourself from my roster."""
-        f = mess.getFrom().getStripped()
-        self.conn.Roster.Unsubscribe( f)
-        # we'll keep them authorized though
-        #self.conn.Roster.Unauthorize( f)
-        return "Sorry to see you go"
+    #def bot_deauthorize( self, mess, args):
+    #    """Remove yourself from my roster."""
+    #    f = mess.getFrom().getStripped()
+    #    self.conn.Roster.Unsubscribe( f)
+    #    # we'll keep them authorized though
+    #    #self.conn.Roster.Unauthorize( f)
+    #    return "Sorry to see you go"
 
     #def bot_sendsubscribe( self, mess, args):
     #    f = mess.getFrom().getStripped()
@@ -116,6 +134,20 @@ class MarvinJabberBot(JabberBot):
     def bot_spell( self, mess, args):
         """Checks the spelling of a word"""
         return botcommands.spellCheck(args)
+    
+    def bot_dbg(self, mess, args):
+        """HIDDEN used for debugging"""
+        jid = mess.getFrom().getStripped()
+        jidobj = mess.getFrom()
+        #jid = 'vrillusions@gmail.com'
+        subscribe = self.conn.Roster.getSubscription( jid)
+        ask = self.conn.Roster.getAsk(jid)
+        show = self.conn.Roster.getShow(jidobj)
+        group = self.conn.Roster.getGroups(jid)
+        result = 'sub:%s ask:%s show:%s group:%s' % (subscribe, ask, show, group)
+        #result = self.conn.Roster.getRawItem(jid)
+        #result = self.conn.Roster.getItems()
+        return result
 
 
 if __name__ == '__main__':
@@ -125,7 +157,8 @@ if __name__ == '__main__':
     password = Config.get('jabberbot', 'password')
     
     bot = MarvinJabberBot(username,password)
-    bot.serve_forever()
+    bot.serve_forever(bot.connectCallback())
+    #bot.serve_forever()
     # error handling is handled in serve_forever, don't think it is needed
     # here.  At least it's not as important
 
