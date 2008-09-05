@@ -13,6 +13,8 @@ __version__ = "$Rev$"
 import datetime
 import hashlib
 import os
+import string
+from random import choice
 from ConfigParser import ConfigParser
 
 from jabberbot import JabberBot
@@ -101,6 +103,14 @@ class MarvinJabberBot(JabberBot):
     def bot_spell(self, mess, args):
         """Checks the spelling of a word"""
         return botcommands.spellCheck(args)
+    
+    def bot_random(self, mess, args):
+        """Returns a random 32 character string useful for passwords"""
+        chars = string.letters + string.digits
+        randomOutput = ''
+        for i in range(32):
+            randomOutput = randomOutput + choice(chars)
+        return randomOutput
     
     def bot_dbg(self, mess, args):
         """HIDDEN used for debugging"""
