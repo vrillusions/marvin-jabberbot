@@ -111,6 +111,16 @@ class MarvinJabberBot(JabberBot):
         for i in range(32):
             randomOutput = randomOutput + choice(chars)
         return randomOutput
+
+    def bot_password(self, mess, args):
+        """Similar to random command but tries to produce a pronounceable password"""
+        vowels = 'aeiou'
+        consonants = 'bcdfghjklmnpqrstvwxyz'
+        numbers = string.digits
+        randomPassword = ( choice(consonants) + choice(vowels) + choice(consonants) + 
+            choice(vowels) + choice(consonants) + choice(vowels) + choice(consonants) + 
+            choice(numbers) )
+        return randomPassword
     
     def bot_dbg(self, mess, args):
         """HIDDEN used for debugging"""
