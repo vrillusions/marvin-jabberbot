@@ -122,6 +122,14 @@ class MarvinJabberBot(JabberBot):
             choice(numbers) )
         return randomPassword
     
+    def bot_ascii2hex(self, mess, args):
+        """Takes an ascii string and converts it to hexadecimal."""
+        return args.encode('hex')
+    
+    def bot_hex2ascii(self, mess, args):
+        """Takes a hex string and converts it to ascii."""
+        return args.decode('hex')
+    
     def bot_dbg(self, mess, args):
         """HIDDEN used for debugging"""
         jid = mess.getFrom().getStripped()
