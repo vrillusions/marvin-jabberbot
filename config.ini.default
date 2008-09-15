@@ -1,4 +1,4 @@
 [jabberbot]
 username=somebot@example.com
 password=foo
-
+adminjid=you@example.jabber.org

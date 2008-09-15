@@ -84,7 +84,7 @@ class MarvinJabberBot(JabberBot):
 
     def bot_time(self, mess, args):
         """Displays current server time."""
-        return str(datetime.datetime.now())
+        return str(datetime.datetime.now()) + " EST/EDT"
 
     def bot_rot13(self, mess, args):
         """Returns passed arguments rot13'ed."""
@@ -150,6 +150,7 @@ if __name__ == '__main__':
     Config.read('config.ini')
     username = Config.get('jabberbot', 'username')
     password = Config.get('jabberbot', 'password')
+    adminJid = Config.get('jabberbot', 'adminjid')
     
     bot = MarvinJabberBot(username,password)
     bot.serve_forever(bot.connectCallback())
