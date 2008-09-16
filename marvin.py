@@ -45,6 +45,11 @@ class MarvinJabberBot(JabberBot):
         jid = pres.getFrom().getStripped()
         self.conn.Roster.delItem(jid)
     
+    def bot_privacy(self, mess, args):
+        """A simplistic privacy polic (summary: nothing is logged)"""
+        privacytext = open('privacy.txt', 'r').read()
+        return privacytext
+
     def bot_serverinfo(self, mess, args):
         """HIDDEN Displays information about the server."""
         #version = open('/proc/version').read().strip()

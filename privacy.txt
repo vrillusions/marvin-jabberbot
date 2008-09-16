@@ -1,0 +1,9 @@
+DISCLAIMER: I am not a lawyer but here's an adhoc privacy policy for those concerned.
+
+Your privacy is important.  The only information stored by the jabber bot is the JID used when you added the bot to your roster.  No other logs are kept.
+
+The jabber bot has a TLS secured connection to the xmpp server that it connects to as well as being a localhost connection.  The xmpp server also supports server to server (s2s) connections over secure connections as well.  So long as your xmpp server supports secure connections and if you connect to the server via TLS then THEORETICALLY all connections are encrypted.
+
+Some of the functions provided by the bot are fully intended to be used for sensitive use, such as a password.  Again, no logs are kept by the bot.  Keep in mind that your own IM client usually keeps a log of previous chats.  You will need to either disable that logging or erase it after generating a credential.
+
+Feel free to contact me. Both my jabber id and email address is vr@vrillusions.com.
