@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 # JabberBot: A simple jabber/xmpp bot framework
-# Copyright (c) 2007 Thomas Perl <thp@thpinfo.com>
+# Copyright (c) 2007-2009 Thomas Perl <thpinfo.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,14 +20,20 @@
 #
 
 
-import xmpp
+import sys
+
+try:
+    import xmpp
+except ImportError:
+    print >>sys.stderr, 'You need to install xmpppy from http://xmpppy.sf.net/.'
+    sys.exit(-1)
 import inspect
 
 
 """A simple jabber/xmpp bot framework
 
 This is a simple bot framework around the "xmpppy" framework.
-Copyright (c) 2007 Thomas Perl <thp@thpinfo.com>
+Copyright (c) 2007-2009 Thomas Perl <thpinfo.com>
 
 To use, subclass the "JabberBot" class and implement "bot_" methods 
 (or whatever you set the command_prefix to), like this:
@@ -38,7 +44,9 @@ class StupidEchoBot(JabberBot):
         return 'You said: ' + args
 
     def bot_subscribe( self, mess, args):
-        "Send the subscribe command to have me authorize your subscription to my presence"
+        "HIDDEN (Authorize the presence subscription request)"
+        # The docstring for this command has "HIDDEN" in it, so
+        # the help output does not show this command.
         f = mess.getFrom()
         self.conn.Roster.Authorize( f)
         return 'Authorized.'
@@ -61,7 +69,7 @@ bot.serve_forever()
 """
 
 __author__ = 'Thomas Perl <thp@thpinfo.com>'
-__version__ = '0.4'
+__version__ = '0.6'
 
 
 class JabberBot(object):
@@ -161,10 +169,7 @@ class JabberBot(object):
 
     def help_callback( self, mess, args):
         """Returns a help string listing available options. Automatically assigned to the "help" command."""
-        self.commands.items().sort()
-        usage = '\n'.join( [ '%s: %s' % ( name, command.__doc__ or '(undocumented)' ) 
-            for ( name, command ) in self.commands.items() 
-	    if (name != 'help' and command.__doc__[:6] != 'HIDDEN') ])
+        usage = '\n'.join(sorted(['%s: %s' % (name, command.__doc__ or '(undocumented)') for (name, command) in self.commands.items() if name != 'help' and (not command.__doc__ or not command.__doc__.startswith('HIDDEN'))]))
 
         if self.__doc__:
             description = self.__doc__.strip()
