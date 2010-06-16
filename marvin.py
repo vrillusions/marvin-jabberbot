@@ -5,6 +5,8 @@
 A jabber bot made to play with jabber, python, etc and hopefully still be
 useful.
 
+@todo: use a decorator for admin commands
+
 """
 
 # $Id$
@@ -24,6 +26,19 @@ import botcommands
 
 class MarvinJabberBot(JabberBot):
     """Incredible... It's even worse than I thought it would be."""
+    def __init__(self, jid, password, res=None, adminjid=None):
+        """The init function."""
+        if hasattr(JabberBot, '__init__'):
+            JabberBot.__init__(self, jid, password, res)
+        self.adminjid = adminjid
+    
+    def _if_admin(self, jid, command):
+        if jid == self.adminjid:
+            result = eval(command)
+            return result
+        else:
+            return 'Not authorized'
+    
     def connectCallback(self):
         """Called after successful connection but before processing"""
         # would have like to add the RegisterHandlers here but it doesn't appear to work
@@ -55,7 +70,8 @@ class MarvinJabberBot(JabberBot):
         #version = open('/proc/version').read().strip()
         #loadavg = open('/proc/loadavg').read().strip()
         #return '%s\n\n%s' % ( version, loadavg, )
-        return botcommands.getServerInfo()
+        jid = mess.getFrom().getStripped()
+        return self._if_admin(jid, 'botcommands.getServerInfo()')
 
     def bot_url(self, mess, args):
         """Returns a shorten form of url."""
@@ -84,9 +100,10 @@ class MarvinJabberBot(JabberBot):
 
     def bot_reload(self, mess, args):
         """HIDDEN Reloads the bot."""
-        self.quit()
-        return None
-
+        jid = mess.getFrom().getStripped()
+        result = self._if_admin(jid, 'self.quit()')
+        return result
+        
     def bot_time(self, mess, args):
         """Displays current server time."""
         return str(datetime.datetime.now()) + " EST/EDT"
@@ -138,26 +155,28 @@ class MarvinJabberBot(JabberBot):
     def bot_dbg(self, mess, args):
         """HIDDEN used for debugging"""
         jid = mess.getFrom().getStripped()
+        self._if_admin(jid, '"True"')        
+        jid = mess.getFrom().getStripped()
         jidobj = mess.getFrom()
         #jid = 'vrillusions@gmail.com'
         subscribe = self.conn.Roster.getSubscription( jid)
         ask = self.conn.Roster.getAsk(jid)
-        show = self.conn.Roster.getShow(jidobj)
+        # show = self.conn.Roster.getShow(jidobj)
         group = self.conn.Roster.getGroups(jid)
-        result = 'sub:%s ask:%s show:%s group:%s' % (subscribe, ask, show, group)
+        result = 'sub:%s ask:%s group:%s' % (subscribe, ask, group)
         #result = self.conn.Roster.getRawItem(jid)
         #result = self.conn.Roster.getItems()
         return result
 
 
 if __name__ == '__main__':
-    Config = ConfigParser()
-    Config.read('config.ini')
-    username = Config.get('jabberbot', 'username')
-    password = Config.get('jabberbot', 'password')
-    adminJid = Config.get('jabberbot', 'adminjid')
+    config = ConfigParser()
+    config.read('config.ini')
+    username = config.get('jabberbot', 'username')
+    password = config.get('jabberbot', 'password')
+    adminjid = config.get('jabberbot', 'adminjid')
     
-    bot = MarvinJabberBot(username,password)
+    bot = MarvinJabberBot(jid=username,password=password,adminjid=adminjid)
     bot.serve_forever(bot.connectCallback())
     # error handling is handled in serve_forever, don't think it is needed
     # here.  At least it's not as important
