@@ -9,8 +9,10 @@ useful.
 
 """
 
-# $Id$
-__version__ = "$Rev$"
+#__version__ = "$Rev$"
+
+import sys
+sys.path.append('lib')
 
 import datetime
 import hashlib
@@ -62,7 +64,7 @@ class MarvinJabberBot(JabberBot):
     
     def bot_privacy(self, mess, args):
         """A simplistic privacy polic (summary: nothing is logged)"""
-        privacytext = open('privacy.txt', 'r').read()
+        privacytext = open('etc/privacy.txt', 'r').read()
         return privacytext
 
     def bot_serverinfo(self, mess, args):
@@ -171,7 +173,7 @@ class MarvinJabberBot(JabberBot):
 
 if __name__ == '__main__':
     config = ConfigParser()
-    config.read('config.ini')
+    config.read('etc/config.ini')
     username = config.get('jabberbot', 'username')
     password = config.get('jabberbot', 'password')
     adminjid = config.get('jabberbot', 'adminjid')
