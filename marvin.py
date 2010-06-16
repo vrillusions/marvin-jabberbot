@@ -27,7 +27,9 @@ import botcommands
 
 
 class MarvinJabberBot(JabberBot):
-    """Incredible... It's even worse than I thought it would be."""
+    """Incredible... It's even worse than I thought it would be.
+    
+    Source code: http://github.com/vrillusions/marvin-jabberbot"""
     def __init__(self, jid, password, res=None, adminjid=None):
         """The init function."""
         if hasattr(JabberBot, '__init__'):
