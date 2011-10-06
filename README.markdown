@@ -1,4 +1,4 @@
-# Marvin Jabberbot
+# Marvin Jabberbot [![status](http://stillmaintained.com/vrillusions/marvin-jabberbot.png)](http://stillmaintained.com/vrillusions/marvin-jabberbot)
 
 Add **marvin@vrillusions.com** to access him.
 
