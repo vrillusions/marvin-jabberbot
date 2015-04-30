@@ -1,0 +1,2 @@
+pyenchant==1.6.5
+xmpppy==0.5.0rc1
